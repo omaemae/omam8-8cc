@@ -2,6 +2,4 @@
 *.o
 *.s
 *~
-8cc
-stage?
-utiltest
+omam8-8cc
