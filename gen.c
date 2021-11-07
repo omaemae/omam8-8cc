@@ -107,7 +107,7 @@ static void emit_nostack(char *fmt, ...) {
 
 static char *get_int_reg(Type *ty, char r) {
     assert(r == 'a' || r == 'b');
-    return r;
+    return r == 'a' ? "a" : "b";
 }
 
 static char *get_load_inst(Type *ty) {
@@ -309,12 +309,15 @@ static void emit_lsave(Type *ty, int off) {
 
 static void do_emit_assign_deref(Type *ty, int off) {
     SAVE;
-    emit("spob");
+    pop("b");
     char *reg = get_int_reg(ty, 'b');
     if (off)
         emit("mv #%s, $%d", reg, off);
-    else
-        emit("mv #%s, #a", reg);
+    else {
+        // emit("mv #%s, #a", reg);
+        push(reg);
+        pop("a");
+    }
     pop("a");
 }
 
@@ -326,6 +329,7 @@ static void emit_assign_deref(Node *var) {
 }
 
 static void emit_pointer_arith(char kind, Node *left, Node *right) {
+    printf("WARN: emit_pointer_arith is experimental!\n");
     SAVE;
     emit_expr(left);
     push("a");
@@ -335,7 +339,9 @@ static void emit_pointer_arith(char kind, Node *left, Node *right) {
     /*int size = left->ty->ptr->size;
     if (size > 1)
         emit("imul $%d, #rax", size);*/
-    emit("mv #b, #a");
+    // emit("mv #b, #a");
+    push("b");
+    pop("a");
     pop("b");
     switch (kind) {
     case '+': emit("add #a, #b"); break;
@@ -463,13 +469,13 @@ static void emit_comp(char *inst, char *usiginst, Node *node) {
     // else
     //     emit("%s #al", inst);
     // emit("movzb #al, #eax");
+    printf("WARN: emit_comp is experimental!\n");
     emit_expr(node->left);
     push("a");
     emit_expr(node->right);
     pop("b");
     emit("cmp #a, #b");
     emit("%sa", inst);
-    printf("WARN: emit_comp is experimental!\n");
 }
 
 static void emit_binop_int_arith(Node *node) {
@@ -545,7 +551,11 @@ static void emit_load_convert(Type *to, Type *from) {
     //     emit_intcast(from);
     // else if (is_inttype(to))
     //     emit_toint(from);
-    printf("WARN: emit_load_convert not supported yet!\n");
+    printf("WARN: emit_load_convert is experimental!\n");
+    if (is_inttype(from) && is_inttype(to))
+        emit_intcast(from);
+    else if (is_inttype(to))
+        emit_toint(from);
 }
 
 static void emit_ret() {
@@ -1057,7 +1067,7 @@ static void emit_func_call(Node *node) {
 
     // if (isptr) pop("r11");
     if (ftype->hasva)
-        emit("mov $%u, #a", vec_len(floats));
+        emit("mv $%u, #a", vec_len(floats));
 
     if (isptr)
         emit("call *#r11");
