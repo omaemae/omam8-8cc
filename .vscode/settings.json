@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "bitset": "c",
+        "forward_list": "c",
+        "functional": "c",
+        "iterator": "c",
+        "list": "c",
+        "memory": "c",
+        "random": "c"
+    }
+}

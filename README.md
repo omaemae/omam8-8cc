@@ -1,16 +1,9 @@
 8cc C Compiler
 ==============
 
-Note: 8cc is no longer an active project. The successor is
-[chibicc](https://github.com/rui314/chibicc).
-
 8cc is a compiler for the C programming language.
 It's intended to support all C11 language features
 while keeping the code as small and simple as possible.
-
-The compiler is able to compile itself.
-You can see its code both as an implementation of the C language
-and as an example of what this compiler is able to compile.
 
 8cc's source code is carefully written to be as concise and easy-to-read
 as possible, so that the source code becomes good study material
@@ -22,10 +15,8 @@ It's not an optimizing compiler.
 Generated code is usually 2x or more slower than GCC.
 I plan to implement a reasonable level of optimization in the future.
 
-8cc supports x86-64 Linux only. I have no plan to make it portable until
-I fix all known miscompilations and implement an optimization pass.
-As of 2015, I'm using Ubuntu 14 as my development platform.
-It should work on other x86-64 Linux distributions though.
+This fork of 8cc (poorly) supports the
+[omam8](https://github.com/omaemae/omam8) architecture.
 
 Note: Do not have high expectations on this compiler.
 If you try to compile a program other than the compiler itself,
@@ -40,21 +31,11 @@ Run make to build:
 
     make
 
-8cc comes with unit tests. To run the tests, give "test" as an argument:
-
-    make test
-
-The following target builds 8cc three times to verify that
-stage1 compiler can build stage2, and stage2 can build stage3.
-It then compares stage2 and stage3 binaries byte-by-byte to verify
-that we reach a fixed point.
-
-    make fulltest
-
-Author
+Authors
 ------
 
-Rui Ueyama <rui314@gmail.com>
+- Rui Ueyama <rui314@gmail.com> - the original 8cc
+- omame <me@omame.xyz> - omam8-specific port of 8cc
 
 
 Links for C compiler development
